@@ -11,16 +11,13 @@ assignments = np.zeros(len(E), dtype=int)
 for iteration in range(1, 100):
     print(f"Itération {iteration}:")
 
-    # Assignation des points aux classes
     for i, obj in enumerate(E):
         distances = np.abs(centers - obj)
         assignments[i] = np.argmin(distances)
 
-    # Mise à jour des centres de gravité
     new_centers = np.array([np.mean(E[assignments == k]) for k in range(num_clusters)])
     print(f"Centres de gravité : {new_centers}")
 
-    # Vérification de la convergence
     if np.all(new_centers == centers):
         break
 
