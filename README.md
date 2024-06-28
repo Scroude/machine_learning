@@ -75,17 +75,7 @@
         print(f"Classe {k+1}: {E[assignments == k]}")` 
     
     Après la convergence de l'algorithme ou la fin des itérations, le code affiche les points de chaque cluster. Chaque cluster `k` est affiché avec ses points assignés.
-    
 
-### Comportement du Code
-
-1.  **Initialisation** : Les points de données sont initialement assignés aux clusters basés sur les centres de clusters donnés.
-2.  **Itération** : À chaque itération, l'algorithme :
-    -   Assigne chaque point de données au cluster le plus proche.
-    -   Recalcule les centres des clusters comme la moyenne des points assignés à chaque cluster.
-    -   Vérifie si les centres des clusters ont changé par rapport à l'itération précédente.
-3.  **Convergence** : Le processus se répète jusqu'à ce que les centres des clusters ne changent plus ou que le nombre maximal d'itérations soit atteint.
-4.  **Résultat final** : Les points de données sont affichés regroupés par cluster.
 ## Perceptron
 ### Décomposition du code
 
@@ -161,102 +151,4 @@
         
         Ici, les poids sont ajustés pour augmenter leur contribution, car la sortie attendue est supérieure à la sortie prédite.
         
-
-### Comportement du Code
-
--   **Initialisation** : Les poids sont initialement définis à de petites valeurs positives.
--   **Boucle de mise à jour** : Pour chaque combinaison d'entrée-sortie, le code imprime les valeurs actuelles des entrées et la sortie attendue, calcule la somme pondérée et ajuste les poids si nécessaire.
--   **Condition de correction** : Les poids sont modifiés seulement si la prédiction est incorrecte par rapport à la sortie attendue.
--   **Apprentissage** : La mise à jour des poids suit la règle de correction, qui est une forme simplifiée de l'apprentissage supervisé.
-## XOR
-### Décomposition du code
-
-1.  **Importation de NumPy** :
     
-    `import numpy as np` 
-    
-    La bibliothèque NumPy est importée pour faciliter les opérations sur les tableaux, qui sont essentiels pour les calculs de réseaux de neurones.
-    
-2.  **Définition des entrées et de la sortie** :
-    
-    `X = np.array([[0.8, 0.2]])  # Entrées
-    y = np.array([[0.4]])       # Sortie attendue` 
-    
-    -   `X` est une matrice d'entrée contenant un seul exemple avec deux caractéristiques : X=[[0.8,0.2]]X = [[0.8, 0.2]]X=[[0.8,0.2]].
-    -   `y` est la sortie attendue pour cet exemple : y=[[0.4]]y = [[0.4]]y=[[0.4]].
-3.  **Initialisation des poids** :
-    
-    `W1 = np.array([[0.5, 0.4], [0.3, 0.2]])  # Poids de la couche cachée
-    W2 = np.array([[0.8], [0.7]])            # Poids de la couche de sortie` 
-    
-    -   `W1` est la matrice de poids pour les connexions entre les neurones d'entrée et les neurones de la couche cachée.
-    -   `W2` est la matrice de poids pour les connexions entre les neurones de la couche cachée et le neurone de sortie.
-4.  **Définition de la fonction sigmoïde et de sa dérivée** :
-    
-    `def sigmoid(x):
-        return 1 / (1 + np.exp(-x))
-    
-    def sigmoid_derivative(x):
-        return x * (1 - x)` 
-    
-    -   `sigmoid(x)` est la fonction d'activation sigmoïde, qui transforme les valeurs d'entrée en une sortie entre 0 et 1.
-    -   `sigmoid_derivative(x)` calcule la dérivée de la fonction sigmoïde, utilisée dans la rétropropagation pour ajuster les poids.
-5.  **Définition du taux d'apprentissage et du nombre d'époques** :
-    
-    `learning_rate = 0.1
-    epochs = 1000` 
-    
-    -   `learning_rate` est le facteur par lequel les mises à jour des poids sont multipliées. Il contrôle la taille des ajustements des poids à chaque itération.
-    -   `epochs` est le nombre de fois que le réseau de neurones parcourt l'ensemble des données d'entraînement.
-6.  **Boucle d'entraînement du réseau de neurones** :
-    
-    `for _ in range(epochs):` 
-    
-    Cette boucle s'exécute pour un nombre fixé d'époques, mettant à jour les poids à chaque itération.
-    
-    -   **Calcul des activations de la couche cachée** :
-        
-        `hidden_layer_input = np.dot(X, W1)
-        hidden_layer_output = sigmoid(hidden_layer_input)` 
-        
-        Les entrées `X` sont multipliées par les poids `W1` pour obtenir les activations de la couche cachée (`hidden_layer_input`), puis transformées par la fonction sigmoïde pour obtenir les sorties de la couche cachée (`hidden_layer_output`).
-        
-    -   **Calcul de la sortie du réseau** :
-        
-        `output_layer_input = np.dot(hidden_layer_output, W2)
-        output_layer_output = sigmoid(output_layer_input)` 
-        
-        Les sorties de la couche cachée sont multipliées par les poids `W2` pour obtenir les activations de la couche de sortie (`output_layer_input`), qui sont ensuite transformées par la fonction sigmoïde pour obtenir la sortie finale du réseau (`output_layer_output`).
-        
-    -   **Calcul de l'erreur de sortie** :
-        
-        `error = y - output_layer_output` 
-        
-        L'erreur est la différence entre la sortie attendue `y` et la sortie prédite `output_layer_output`.
-        
-    -   **Calcul du gradient de la couche de sortie** :
-        
-        `d_output = error * sigmoid_derivative(output_layer_output)` 
-        
-        Le gradient pour la couche de sortie (`d_output`) est calculé en multipliant l'erreur par la dérivée de la fonction sigmoïde de la sortie de la couche de sortie.
-        
-    -   **Propagation de l'erreur vers la couche cachée** :
-        
-        `error_hidden_layer = d_output.dot(W2.T)
-        d_hidden_layer = error_hidden_layer * sigmoid_derivative(hidden_layer_output)` 
-        
-        L'erreur est propagée vers la couche cachée (`error_hidden_layer`), et le gradient pour la couche cachée (`d_hidden_layer`) est calculé de manière similaire.
-        
-    -   **Mise à jour des poids** :
-        
-        `W2 += hidden_layer_output.T.dot(d_output) * learning_rate
-        W1 += X.T.dot(d_hidden_layer) * learning_rate` 
-        
-        Les poids `W2` et `W1` sont mis à jour en utilisant les gradients calculés, multipliés par le taux d'apprentissage.
-        
-7.  **Calcul de la sortie finale après l'entraînement** :
-    
-    `final_output = sigmoid(np.dot(sigmoid(np.dot(X, W1)), W2))
-    print("Sortie prédite :", final_output)` 
-    
-    Après l'entraînement, le réseau de neurones est testé sur la même entrée pour voir la sortie prédite finale.
